@@ -286,6 +286,11 @@ PROP_MAP = {
     "OBJECT/Name": ("id", lambda v, *args: slugify(v["strval"])),
     "OBJECT/Align": ("align", lambda v, *args: v["strval"]),
     "OBJECT/Position": (("x", "y"), lambda v, *args: v["intarray"]),
+    # Hidden/visibility handling
+    "OBJECT/Hidden": (
+        None,
+        lambda v, *args: {"hidden": v["strval"].lower() == "true"},
+    ),
     "OBJECT/Disabled": (
         None,
         lambda v, *args: {"state": {"disabled": v["strval"].lower() == "true"}},
@@ -302,6 +307,10 @@ PROP_MAP = {
     "OBJECT/Size": (None, size_parser),
     "OBJECT/Layout_type": (None, layout_parser),
     "TABPAGE/Layout_type": (None, layout_parser),
+    "TABPAGE/Hidden": (
+        None,
+        lambda v, *args: {"hidden": v["strval"].lower() == "true"},
+    ),
     "TABPAGE/Scrollable": (
         "scrollable",
         lambda v, *args: v["strval"].lower() == "true",
