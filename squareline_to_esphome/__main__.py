@@ -147,7 +147,7 @@ def slugify(name: str) -> str:
 
 def slugify_image(name: str) -> str:
     """make a YAML-friendly id: letters, digits, underscores only, lowercase"""
-    return name.split("/")[-1].replace(".", "_").replace(" ", "_")
+    return name.split("/")[-1].replace(".", "_").replace(" ", "_").replace("-", "_")
 
 
 def size_parser(node: dict, yaml_root_key: str, images: dict) -> dict:
@@ -415,6 +415,10 @@ def deep_update(original, update_with):
 
 def convert_widget(node: dict, images: dict, object_map: dict) -> dict | None:
     """Return YAML snippet (dict) for a SquareLine widget node with coordinate conversion"""
+    # Skip nodes explicitly marked to not export
+    if node.get("dont_export", False):
+        return None
+
     sl_type = node.get("saved_objtypeKey")
     yaml_root_key = TYPE_MAP.get(sl_type)
     if not yaml_root_key:
@@ -559,6 +563,9 @@ def create_object_map(data: dict) -> dict:
 
     def process_node(node):
         if isinstance(node, dict):
+            # Skip nodes explicitly marked to not export
+            if node.get("dont_export", False):
+                return
             # Check if this is an object with a name and guid
             name_prop = get_prop(node, "OBJECT/Name")
             if name_prop and "guid" in node:
@@ -653,6 +660,9 @@ def main():
 
         def recurse(node):
             if isinstance(node, dict):
+                # Skip nodes marked with dont_export
+                if node.get("dont_export", False):
+                    return
                 if node.get("saved_objtypeKey") == "SCREEN":
                     pages.append(convert_page(node, images, object_map))
                 for child in node.get("children", []):
