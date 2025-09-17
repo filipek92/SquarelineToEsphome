@@ -739,7 +739,10 @@ def main():
 
 
         lvgl_yaml = {
-            "lvgl": {"pages": pages},
+            "lvgl": {
+                "id": "lvgl_comp",
+                "pages": pages
+            },
         }
         if images_list:
             lvgl_yaml["image"] = images_list
