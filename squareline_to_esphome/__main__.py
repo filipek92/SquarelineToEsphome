@@ -731,7 +731,7 @@ def main():
                             glyphs.append(ch)
                     if glyphs:
                         font_entry["glyphsets"] = ["GF_Latin_Kernel"]
-                        font_entry["glyphs"] = glyphs
+                        font_entry["glyphs"] = "".join(glyphs)
 
                 fonts_list.append(font_entry)
             except Exception as e:
